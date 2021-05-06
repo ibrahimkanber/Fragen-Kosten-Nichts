@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from "react-router-dom"
-
+import { useSelector, useDispatch } from "react-redux"
 
 ///
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +13,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import InfoIcon from "@material-ui/icons/Info";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import { Button } from '@material-ui/core';
+
 //
 import { useStyles, StyledMenu, StyledMenuItem } from "./NavbarStyles"
 import detective from "../../assets/help.jpg";
@@ -22,15 +23,25 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SendIcon from '@material-ui/icons/Send';
 ////
+import { logout } from "../../redux/actions/authActions"
+
+
+
 
 export default function Navbar() {
-    const loginStatus = true
+    const { loginStatus } = useSelector(state => state.authReducer)
+    const dispatch = useDispatch()
     const history = useHistory()
+
+
     const [homeBtnFlag, setHomeBtnFlag] = useState(false)
     const [loginBtnFlag, setLoginBtnFlag] = useState(true)
     const [signUpBtnFlag, setSignUpBtnFlag] = useState(true)
+
+
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -39,6 +50,19 @@ export default function Navbar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+        console.log("logout")
+        dispatch(logout())
+        history.push("/")
+    }
+
+
+
+
+
+
+
 
     return (
         <>
@@ -81,7 +105,7 @@ export default function Navbar() {
                             onClose={handleClose}
                         >
 
-                            {loginStatus ?
+                            {!loginStatus ?
                                 <div>
                                     <StyledMenuItem>
                                         <ListItemIcon>
@@ -116,19 +140,14 @@ export default function Navbar() {
                                         </ListItemIcon>
                                         <ListItemText primary="Log Out" />
                                     </StyledMenuItem>
-                                    <StyledMenuItem>
-                                        <ListItemIcon>
-                                            <SendIcon fontSize="Profile" />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Log Out" />
-                                    </StyledMenuItem>
+                                    
                                 </div>
 
 
                             }
 
                         </StyledMenu>
-                        {loginStatus ?
+                        {!loginStatus ?
                             <>
                                 <div className={classes.home}>
                                     <Button className={classes.rightBtn}
@@ -139,7 +158,7 @@ export default function Navbar() {
                                             history.push("/")
                                         }}
                                         style={{ display: homeBtnFlag ? "block" : "none" }}>
-                                        <Typography style={{ fontSize: 12, color: "white" }}>
+                                        <Typography style={{ fontSize: 12 }} color="error">
                                             Home
                                 </Typography>
                                     </Button>
@@ -152,7 +171,7 @@ export default function Navbar() {
                                         setSignUpBtnFlag(true)
 
                                     }} >
-                                        <Typography style={{ fontSize: 12, color: "white" }}>
+                                        <Typography style={{ fontSize: 12 }}  color="error">
                                             login
                                 </Typography>
                                     </Button>
@@ -166,13 +185,13 @@ export default function Navbar() {
 
 
                                     }}>
-                                        <Typography style={{ fontSize: 12, color: "white" }}>
+                                        <Typography style={{ fontSize: 12}}  color="error">
                                             Sign Up
                                 </Typography>
                                     </Button>
                                 </div>
                                 <Button className={classes.rightBtn}>
-                                    <Typography style={{ fontSize: 12, color: "white" }}>
+                                    <Typography style={{ fontSize: 12}}  color="error">
                                         About Us
                                 </Typography>
                                 </Button>
@@ -181,16 +200,26 @@ export default function Navbar() {
 
                             :
                             <>
-                                <Button variant="contained" className={classes.rightBtn} >
-                                    <Typography style={{ fontSize: 12 }}>
-                                        Log Out
+                         {/*        <Button variant="contained" className={classes.rightBtn} onClick={handleStack}>
+                                    <Typography style={{ fontSize: 12, color: "white" }}>
+                                        MyStack
                                 </Typography>
-                                </Button>
+                                </Button> */}
+
                                 <Button variant="contained" className={classes.rightBtn}>
-                                    <Typography style={{ fontSize: 12 }}>
+                                    <Typography style={{ fontSize: 12 }}  color="error">
                                         Profile
                                 </Typography>
                                 </Button>
+
+                                <Button variant="contained" className={classes.rightBtn} onClick={handleLogout} >
+                                    <Typography style={{ fontSize: 12}}  color="error" >
+                                        Log Out
+                                </Typography>
+
+                                </Button>
+
+
 
                             </>
                         }
@@ -202,7 +231,9 @@ export default function Navbar() {
 
             <div className={classes.jumbotron}>
 
+
             </div>
+
         </>
     );
 }

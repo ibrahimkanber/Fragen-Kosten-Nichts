@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
-  Button,
+ 
   TextField,
   Grid,
   Container,
@@ -8,11 +8,20 @@ import {
 
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+
 import { useFormik } from "formik";
-import { withStyles } from '@material-ui/core/styles';
+
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+
+import {useDispatch,useSelector} from "react-redux"
+import {signUp} from "../redux/actions/authActions"
+
+import {useHistory} from "react-router-dom";
+
+import {StyledButton,stylesFunc} from "./LoginStyle"
+
+
 
 
 const signUpValidationSchema = Yup.object().shape({
@@ -24,71 +33,48 @@ const signUpValidationSchema = Yup.object().shape({
 });
 
 
-const StyledButton = withStyles({
-    root: {
-      background: '#021636',
-      borderRadius: 3,
-      border: 0,
-      color: '#02ab48',
-     
-      padding: '8px 30px',
-      
-    },
-    label: {
-      textTransform: 'capitalize',
-      fontSize:20
-    },
-  })(Button);
 
-const stylesFunc = makeStyles((theme) => ({
-  wrapper: {
-    marginTop: "3rem",
-    height: "calc(100vh - 19.0625rem)",
-    textAlign: "center",
-    marginBottom: "12rem",
-  },
-  avatar: {
-    margin: "1rem auto",
-    backgroundColor: theme.palette.secondary.main,
-  },
-  signUp: {
-    margin: "1rem",
-  },
-  login: {
-    textDecoration: 'none',
-    fontWeight: '600',
-    paddingLeft : '0.5rem'
-  }  
-}));
 
 export const  Signup=(props)=> {
+  const {loginStatus}=useSelector(state=>state.authReducer)
+  const history=useHistory()
+
+  const dispatch = useDispatch()
+
 
   const formik = useFormik({
     initialValues: {
       displayName: "",
       email: "",
       password: "",
-      firstName:"",
-      lastName:"",
-      title:"",
-      file:"",
-    
+  
     },
     validationSchema: signUpValidationSchema,
 
-    onSubmit: async (values) => {
-      console.log(values)
-     
-      
-      
-  
+    onSubmit:  ({displayName,email,password}) => {
+      dispatch(signUp(displayName,email,password))
+
+      history.push("/")
+
+
     },
   });
   const signupStyles = stylesFunc();
 
   const handleGoogleButtonClick = () => {
-    console.log("google")
+  
   };
+
+  useEffect(()=>{
+   
+    if (loginStatus){
+      history.push("/")
+    }
+
+  },[loginStatus])
+ 
+
+
 
   return (
     <Container className={signupStyles.wrapper} maxWidth="sm">

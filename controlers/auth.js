@@ -11,11 +11,11 @@ const {sendEmail}=require("../helpers/libraries/sendEmail")
 const register = asyncErrorWrapper(async (req, res, next) => {
 
 
-    const {name,email,password,role}=req.body;
+    const {name,email,password}=req.body;
     const user = await User.create({
         name,
         email,
-        password,role
+        password
     });
     sendJwtToClient(user,res)
     
@@ -45,13 +45,15 @@ const login=asyncErrorWrapper(
 
 
 const logout=asyncErrorWrapper(async(req,res,next)=>{
+    
     const {NODE_ENV}=process.env
 
+
     return res.status(200)
-    .cookie({
+    .cookie("access_token","token",{
         httpOnly:true,
-        expires:new Date(Date.now()),
-        secure:NODE_ENV==="develpment" ? false:true
+        exprires:new Date(Date.now()),
+        secure:NODE_ENV==="development" ? false:true
     })
     .json({
         success: true,

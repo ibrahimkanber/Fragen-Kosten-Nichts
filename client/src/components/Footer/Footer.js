@@ -94,7 +94,7 @@ export default function Footer() {
 
     return (
 
-        <Container className={classes.main} maxWidth>
+        <Container className={classes.main} maxWidth={false} >
             <Grid container >
                 <Grid item   lg={3} md={3} sm={6} xs={12} >
                     <footer className={classes.footerFirst} >

@@ -11,7 +11,7 @@ router.post("/login",login)
 router.post("/upload",[getAccesToRoute,profileImageUpload.single("profile_image")],imageUpload)
 router.get("/error",errorTest)
 router.get("/profile",getAccesToRoute,getUser)
-router.get("/logout",getAccesToRoute,logout)
+router.get("/logout",logout)
 router.post("/forgotpassword",forgotPassword)
 router.put("/resetpassword",resetPassword);
 router.put("/edit",getAccesToRoute,editDetails)

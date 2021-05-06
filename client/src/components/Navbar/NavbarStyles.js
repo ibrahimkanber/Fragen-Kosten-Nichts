@@ -10,9 +10,10 @@ export const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         
-      
+     
 
     },
+
     menuButton: {
         marginLeft: theme.spacing(2),
         [theme.breakpoints.up('sm')]: {
@@ -114,10 +115,11 @@ export const useStyles = makeStyles((theme) => ({
     },
     jumbotron:{
         color:"red",
-        backgroundColor:"#02ab48",
+        backgroundColor:"white",
         flex:1,
         flexWrap:"wrap",
-        height:"18%",
+        height:100,
+       
         
 
         
@@ -129,9 +131,17 @@ export const useStyles = makeStyles((theme) => ({
             display: "block",
       
         },
-     
+    },
+    root2: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        '& > *': {
+          margin: theme.spacing(1),
+        },
+      }
 
-    }
+
 }));
 
 
@@ -168,3 +178,6 @@ export const StyledMenuItem = withStyles((theme) => ({
       },
     },
   }))(MenuItem);
+
+
+

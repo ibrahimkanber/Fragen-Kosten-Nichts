@@ -1,6 +1,6 @@
 const sendJwtToClient=(user,response)=>{
 
-
+    //console.log(user)
     const token=user.generateJwtFromUser();
     const {JWT_COOKIE,NODE_ENV}=process.env;
     // console.log(JWT_COOKIE)
@@ -16,7 +16,9 @@ const sendJwtToClient=(user,response)=>{
         access_token:token,
         data:{
             name:user.name,
-            email: user.email
+            email: user.email,
+            blocked:user.blocked,
+            id:user._id
         }
     })
 
@@ -24,16 +26,17 @@ const sendJwtToClient=(user,response)=>{
 
 
 const isTokenIncluded=(req)=>{
-    // console.log(req.headers)
-return(
-    req.headers.authorization && req.headers.authorization.startsWith("Bearer:")
-)
+    if (req.headers.cookie==undefined){
+        return false
+    }
+    return true
 }
 
 const getAccessTokenFromHeader=(req)=>{
-    const authorization=req.headers.authorization;
-    const access_token=authorization.split(" ")[1]
-    // console.log(access_token)
+    const cookie=req.headers.cookie;
+    //console.log(cookie)
+    const access_token=cookie.split("=")[1]
+    //console.log(access_token)
     return access_token
 
 }

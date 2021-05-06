@@ -1,74 +1,31 @@
-import React, { useState } from "react";
+import React, {useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
-  Button,
+
   TextField,
   Grid,
   Container,
   Avatar,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
+
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import axios from "axios"
 
+import API from "../utils/API"
+import {login} from "../redux/actions/authActions"
+import {useDispatch, useSelector} from "react-redux";
 
+import {StyledButton,stylesFunc} from "./LoginStyle"
 
 const signInValidationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is required!!"),
   password: Yup.string()
     .required("No password provided.")
-    .min(8, "Password is too short - should be 8 chars minimum."),
+    .min(5, "Password is too short - should be 8 chars minimum."),
 });
 
-const stylesFunc = makeStyles((theme) => ({
-  wrapper: {
-    marginTop: "4rem",
-    height: "100vh",
-    textAlign: "center",
-   
-  },
-  avatar: {
-    margin: "1rem auto",
-    backgroundColor: theme.palette.primary.main,
-  },
-  signIn: {
-    margin: "1rem",
-  }, 
-  register: {
-    textDecoration: 'none',
-    fontWeight: '600',
-    paddingLeft : '0.5rem',
-    
-    opacity:1,
-    
-  }
-  
-}));
-
-
-
-const StyledButton = withStyles({
-  root: {
-    background: '#021636',
-    borderRadius: 3,
-    border: 0,
-    color: '#02ab48',
-    
-    padding: '8px 30px',
-    '&:hover': {
-      backgroundColor:"#021636",
-  },
-    
-  },
-  label: {
-    textTransform: 'capitalize',
-    fontSize:20
-  },
-})(Button);
 
 
 const initialValues = {
@@ -77,25 +34,33 @@ const initialValues = {
 };
 
 export const Login=() =>{
-  const [loginError, setLoginError] = useState(null);
+  const dispatch=useDispatch()
+  //const [loginError, setLoginError] = useState(null);
   const history = useHistory();
   const signinStyles = stylesFunc();
 
   const handleGoogleButtonClick = () => {
-    
-    alert('You are succesfully logged in!');
-    history.push('/');
+    API.get("/api/auth/profile").then(console.log).catch(({response})=>console.log(response))
   };
 
   const handleFormSubmit = (values) => {
-    axios.post("http://localhost:5000/api/auth/login",{
-      email:"scarlett6@gmail.com",
-      password:"1234569"
-    }).then(console.log).catch(({response})=>console.log(response))
-    
-      
-  
+    dispatch(login(values.email,values.password))
+
+    history.push("/")
+
   };
+
+  const {loginStatus}=useSelector(state=>state.authReducer)
+
+  useEffect(()=>{
+   
+    if (loginStatus){
+      history.push("/")
+    }
+
+    
+
+  },[loginStatus])
 
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
@@ -159,12 +124,10 @@ export const Login=() =>{
                 </StyledButton>
               </Grid>
             </Grid>
-            <p style={{ textAlign: "center", color: "red" }}>
-              <small>{loginError}</small>
-            </p>
-            {/* 
-            //TODO: Add register & forgot password text & links
-            */}
+           {/*  <p style={{ textAlign: "center", color: "red" }}>
+            <small>{loginError}</small>
+            </p> */}
+           
           </form>
         )}
       </Formik>

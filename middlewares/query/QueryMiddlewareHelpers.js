@@ -31,7 +31,7 @@ const questionSortHelper=(query,req)=>{
 
 const paginationHelper=async (totalDocuments,query,req)=>{
         const page=parseInt(req.query.page) || 1
-        const limit=parseInt(req.query.limit)|| 1
+        const limit=parseInt(req.query.limit)|| 3
 
         const startIndex= (page-1)*limit
         const endIndex=page*limit

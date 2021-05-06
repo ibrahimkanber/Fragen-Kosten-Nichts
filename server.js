@@ -7,7 +7,12 @@ const app=express();
 app.use(express.json());
 const path=require("path");
 var cors = require('cors');
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 // const auth=require("./routers/auth");
 // const question=require("./routers/question");
 
